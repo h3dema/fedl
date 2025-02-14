@@ -4,6 +4,8 @@ from sklearn.datasets import make_regression
 import torch
 from torch.utils.data import Dataset
 
+from config import batch_size
+
 
 class MyRegressionDataset(Dataset):
     """
@@ -77,7 +79,7 @@ def get_client_data(trainset: Dataset, client_id: int, num_clients: int = 2):
     start_idx = client_id * part_size
     end_idx = start_idx + part_size
     subset = torch.utils.data.Subset(trainset, indices[start_idx:end_idx])
-    return torch.utils.data.DataLoader(subset, batch_size=32, shuffle=True)
+    return torch.utils.data.DataLoader(subset, batch_size=batch_size, shuffle=True)
 
 
 if __name__ == "__main__":

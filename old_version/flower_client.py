@@ -6,7 +6,7 @@ import flwr as fl
 
 from config import batch_size
 
-class FlowerClient(fl.client.NumPyClient):
+class FlowerClient(fl.client.Client):
     def __init__(self, model, train_loader, testset):
         self.testset = testset
         self.model = model
@@ -15,7 +15,17 @@ class FlowerClient(fl.client.NumPyClient):
         self.optimizer = optim.SGD(self.model.parameters(), lr=0.01, momentum=0.9)
 
     def get_parameters(self, config):
-        return [param.cpu().numpy() for param in self.model.parameters()]
+        """
+        Retrieves the model's parameters as a list of NumPy arrays.
+
+        Args:
+            config: Configuration parameters (not used in this function).
+
+        Returns:
+            List of NumPy arrays representing the model's parameters.
+        """
+
+        return [param.detach().cpu().numpy() for param in self.model.parameters()]
 
     def set_parameters(self, parameters):
         for param, new_param in zip(self.model.parameters(), parameters):
@@ -24,6 +34,7 @@ class FlowerClient(fl.client.NumPyClient):
     def fit(self, parameters, config):
         self.set_parameters(parameters)
         self.model.train()
+        print("Training...")
         for epoch in range(1):  # Train for 1 epoch
             for images, labels in self.train_loader:
                 self.optimizer.zero_grad()

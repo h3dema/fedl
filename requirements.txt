@@ -2,4 +2,7 @@ numpy
 matplotlib
 scikit-learn
 torch
-flwr
+
+flwr[simulation]
+datasets
+flwr_datasets
