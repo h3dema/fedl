@@ -25,7 +25,7 @@ python server.py
 
 2. Start the clients (each in a separate terminal or process):
 ```sh
-python client.py
+python clients.py
 ```
 
 The clients will train locally and send updates to the server.
