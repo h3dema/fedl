@@ -32,6 +32,8 @@ num_server_rounds = 10
 fraction_evaluate = 1
 TEST_SIZE = 0.2
 
+assert 0 <= TEST_SIZE < 1
+
 # server address
 HOSTNAME = 'localhost'
 PORT = 8080
