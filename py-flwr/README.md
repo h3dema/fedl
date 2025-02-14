@@ -11,4 +11,4 @@ If your system has one, you can make use of it by configuring the `DEVICE` in `c
 python3 simulation.py
 ```
 
-You can change the configuration in []`config.py`](config.py).
+You can change the configuration in [`config.py`](config.py).
