@@ -1,0 +1,26 @@
+--- metaflow_utils.py      2025-02-14 15:38:03.426021500 +0100
++++ metaflow_utils.py      2025-02-14 15:28:26.533611522 +0100
+@@ -18,7 +18,8 @@
+ import cloudpickle as pickle
+ import ray
+ from dill.source import getsource  # nosec
+-from metaflow.datastore import DATASTORES, FlowDataStore
++from metaflow.plugins import DATASTORES
++from metaflow.datastore import FlowDataStore
+ from metaflow.datastore.exceptions import DataException, UnpicklableArtifactException
+ from metaflow.datastore.task_datastore import TaskDataStore, only_if_not_done, require_mode
+ from metaflow.graph import DAGNode, FlowGraph, StepVisitor, deindent_docstring
+@@ -506,11 +505,12 @@
+         env.get_environment_info()
+         self.local_metadata = LocalMetadataProvider(env, flow, None, None)
+         self.run_id = self.local_metadata.new_run_id()
++        datastore = [d for d in DATASTORES if d.TYPE == "local"][0]
+         self.flow_datastore = FlowDataStore(
+             self.flow_name,
+             env,
+             metadata=self.local_metadata,
+-            storage_impl=DATASTORES["local"],
++            storage_impl=datastore,
+             ds_root=f"{Path.home()}/.metaflow",
+         )
+         return self.run_id
