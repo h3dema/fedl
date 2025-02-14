@@ -3,13 +3,13 @@ This repository contains experiments with federated learning frameworks.
 
 # Installation
 
-## For `pytorch-example`
+## For `py-flwr`
 
 ```
-cd fedl/py-fedl
+cd fedl
 pyenv virtualenv 3.11 fedl
 pyenv activate fedl
-pip3 install -r requirements.txt
+pip3 install -r py-flwr/requirements.txt
 ```
 
 
