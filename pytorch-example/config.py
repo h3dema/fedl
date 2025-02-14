@@ -21,6 +21,7 @@ model_out = "model"
 best_model_name = 'best_model.pth'
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE = "cpu"
 
 # Config ClientApp
 NUM_CLIENTS = 4

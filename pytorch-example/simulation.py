@@ -1,3 +1,4 @@
+import torch
 from flwr.server import ServerApp
 from flwr.client import ClientApp
 from flwr.simulation import run_simulation
@@ -31,7 +32,8 @@ if __name__ == "__main__":
     }
 
     # When running on GPU, assign an entire GPU for each client
-    if False and DEVICE == "cuda":
+    if DEVICE == "cuda" and torch.cuda.device_count() >= NUM_CLIENTS:
+        print("Using GPU backend")
         backend_config = {
             "client_resources": {
                 "num_cpus": 1,
