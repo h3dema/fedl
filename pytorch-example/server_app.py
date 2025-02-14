@@ -33,7 +33,7 @@ def weighted_average(metrics: List[Tuple[int, Metrics]]) -> Metrics:
 
 
 def server_fn(context: Context):
-    print("SERVER:", context)
+    # print("SERVER:", context)
     """Construct components that set the ServerApp behaviour."""
 
     # Initialize model parameters
