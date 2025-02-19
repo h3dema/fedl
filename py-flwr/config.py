@@ -31,9 +31,18 @@ n_client_epochs = 50
 num_server_rounds = 10
 fraction_evaluate = 1
 TEST_SIZE = 0.2
-
 assert 0 <= TEST_SIZE < 1
+
+# Strategies: fedavg, fedavgm, fedmedian
+# STRATEGY_NAME = "fedavg"
+STRATEGY_NAME = "fedmedian"
+
+# Config Strategy for FedAvgM
+server_momentum = 0.2
+server_learning_rate = 0.001
 
 # server address
 HOSTNAME = 'localhost'
 PORT = 8080
+
+assert STRATEGY_NAME in ['fedavg', 'fedavgm', 'fedmedian']
