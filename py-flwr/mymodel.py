@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from config import HIDDEN_SIZE
+from config import configs
 
 
 class RegressionModel(nn.Module):
@@ -17,9 +17,9 @@ class RegressionModel(nn.Module):
         """
         super().__init__()
         self.model = nn.Sequential(
-            nn.Linear(n_features, HIDDEN_SIZE),
+            nn.Linear(n_features, configs.hidden_size),
             nn.Tanh(),
-            nn.Linear(HIDDEN_SIZE, n_outputs),
+            nn.Linear(configs.hidden_size, n_outputs),
         )
 
     def forward(self, x):
@@ -39,13 +39,11 @@ class RegressionModel(nn.Module):
 if __name__ == "__main__":
     from torch.utils.data import DataLoader
     from dataset import MyRegressionDataset
-    from config import BATCH_SIZE
-    from config import N_FEATURES, N_OUTPUTS
 
-    dataset = MyRegressionDataset(N_FEATURES, N_OUTPUTS)
-    dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
+    dataset = MyRegressionDataset(configs.n_features, configs.n_outputs)
+    dataloader = DataLoader(dataset, batch_size=configs.batch_size, shuffle=True)
 
-    model = RegressionModel(N_FEATURES, N_OUTPUTS)
+    model = RegressionModel(configs.n_features, configs.n_outputs)
 
     data = next(iter(dataloader))
     # x [batch_size, n_features]
@@ -53,11 +51,11 @@ if __name__ == "__main__":
     x, y = data
     print("X", data[0].shape, "y", data[1].shape)
 
-    assert y.shape[1] == N_OUTPUTS, f"y shape is not correct: {y.shape}"
+    assert y.shape[1] == configs.n_outputs, f"y shape is not correct: {y.shape}"
 
     yhat = model(x)
 
-    assert yhat.shape[1] == N_OUTPUTS, f"\u0177 shape is not correct: {yhat.shape}"
+    assert yhat.shape[1] == configs.n_outputs, f"\u0177 shape is not correct: {yhat.shape}"
     print("\u0177:", yhat.shape)
 
     if torch.isnan(yhat).any():

@@ -7,8 +7,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 
 from dataset import MyRegressionDataset
-from config import N_FEATURES, N_OUTPUTS, TEST_SIZE
-from config import BATCH_SIZE, NUM_CLIENTS
+from config import configs
 
 
 fds = None  # Cache FederatedDataset
@@ -30,11 +29,11 @@ def load_data(partition_id: int, num_partitions: int, batch_size: int):
     global fds
     if fds is None:
         print("Initializing FederatedDataset")
-        fds = MyRegressionDataset(N_FEATURES, N_OUTPUTS, num_partitions=num_partitions)
+        fds = MyRegressionDataset(configs.n_features, configs.n_outputs, num_partitions=num_partitions)
 
     partition = fds.create_partition(partition_id)
     # Divide data on each node: 80% train, 20% test
-    partition_data = partition.train_test_split(test_size=TEST_SIZE, seed=42)
+    partition_data = partition.train_test_split(test_size=configs.test_fraction_size, seed=42)
     """
     partition_data is a DatasetDict containing the train and test partitions.
     for example if the dataset has 2500 samples, partition_data will contain:
@@ -141,17 +140,17 @@ def test_load_partition():
     fds = None  # guarantee that the dataset is re-initialized
 
     partition_id = 0
-    num_partitions = NUM_CLIENTS
+    num_partitions = configs.n_clients
     print("Calling load_data with partition_id", partition_id)
-    trainloader, testloader = load_data(partition_id, num_partitions, BATCH_SIZE)
+    trainloader, testloader = load_data(partition_id, num_partitions, configs.batch_size)
     data = next(iter(trainloader))
     # print(data.keys())
     # print("Number of samples:", len(data['X']), data['X'].shape)
     print("Data - X:", data['X'].shape, 'Y:', data['y'].shape)
 
-    assert len(data['X']) == BATCH_SIZE and len(data['y']) == BATCH_SIZE
-    assert data['X'].shape[1] == N_FEATURES
-    assert data['y'].shape[1] == N_OUTPUTS
+    assert len(data['X']) == configs.batch_size and len(data['y']) == configs.batch_size
+    assert data['X'].shape[1] == configs.n_features
+    assert data['y'].shape[1] == configs.n_outputs
 
 
 if __name__ == "__main__":
@@ -170,12 +169,12 @@ if __name__ == "__main__":
         test_load_partition()
 
     if args.train:
-        dataset = MyRegressionDataset(N_FEATURES, N_OUTPUTS)
+        dataset = MyRegressionDataset(configs.n_features, configs.n_outputs)
         partition_id = 0
-        num_partitions = NUM_CLIENTS
-        trainloader, testloader = load_data(partition_id, num_partitions, BATCH_SIZE)
+        num_partitions = configs.n_clients
+        trainloader, testloader = load_data(partition_id, num_partitions, configs.batch_size)
 
-        model = RegressionModel(N_FEATURES, N_OUTPUTS)
+        model = RegressionModel(configs.n_features, configs.n_outputs)
 
         result = train(model,
             trainloader, testloader,

@@ -7,21 +7,18 @@ from flwr.common import Context
 from mymodel import RegressionModel
 from task import get_weights, load_data, set_weights, test, train
 
-from config import N_FEATURES, N_OUTPUTS
-from config import BATCH_SIZE, LR
-from config import n_client_epochs
-from config import DEVICE
+from config import configs
 
 
 # Define Flower Client
 class FlowerClient(NumPyClient):
     def __init__(self, trainloader, valloader, local_epochs, learning_rate):
-        self.net = RegressionModel(N_FEATURES, N_OUTPUTS)
+        self.net = RegressionModel(configs.n_features, configs.n_outputs)
         self.trainloader = trainloader
         self.valloader = valloader
         self.local_epochs = local_epochs
         self.lr = learning_rate
-        self.device = DEVICE
+        self.device = configs.device
 
     def fit(self, parameters, config):
         """Train the model with data of this client."""
@@ -50,7 +47,7 @@ def client_fn(context: Context):
     num_partitions = context.node_config["num-partitions"]
 
     # Read run_config to fetch hyperparameters relevant to this run
-    trainloader, valloader = load_data(partition_id, num_partitions, BATCH_SIZE)
+    trainloader, valloader = load_data(partition_id, num_partitions, configs.batch_size)
 
     # Return Client instance
-    return FlowerClient(trainloader, valloader, n_client_epochs, LR).to_client()
+    return FlowerClient(trainloader, valloader, configs.n_client_epochs, configs.learning_rate).to_client()

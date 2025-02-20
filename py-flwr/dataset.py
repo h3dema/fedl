@@ -7,7 +7,7 @@ from torch.utils.data import Dataset as TorchDataset
 from datasets import Dataset
 from flwr_datasets.partitioner import IidPartitioner
 
-from config import BATCH_SIZE
+from config import configs
 
 
 def gen_dict_dataset(input_dim, output_dim, n_samples=5000, noise=0.5, random_state=42):
@@ -98,8 +98,7 @@ class MyRegressionDataset(TorchDataset):
 
 
 if __name__ == "__main__":
-    from config import N_FEATURES, N_OUTPUTS
-    dataset = MyRegressionDataset(N_FEATURES, N_OUTPUTS, num_partitions=2)
+    dataset = MyRegressionDataset(configs.n_features, configs.n_outputs, num_partitions=2)
     data = dataset[0]
     print("X", data[0].shape, "y", data[1].shape)
 
